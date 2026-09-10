@@ -217,3 +217,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Django media/static local
+media/
+staticfiles/
+
+# Environment examples should be tracked
+!.env.example
+
+# IDE
+.vscode/
+.idea/
