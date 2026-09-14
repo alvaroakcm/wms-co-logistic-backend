@@ -71,7 +71,9 @@ class Stock(models.Model):
     )
 
     id_lote = models.IntegerField(
-        db_column="id_lote"
+        db_column="id_lote",
+        null=True,
+        blank=True
     )
 
     id_ubicacion = models.IntegerField(
@@ -79,23 +81,25 @@ class Stock(models.Model):
     )
 
     id_pallet = models.IntegerField(
-        db_column="id_pallet"
+        db_column="id_pallet",
+        null=True,
+        blank=True
     )
 
     cantidad_total = models.DecimalField(
         max_digits=12,
-        decimal_places=2,
+        decimal_places=4,
         db_column="cantidad_total"
     )
 
     cantidad_reservada = models.DecimalField(
         max_digits=12,
-        decimal_places=2,
+        decimal_places=4,
         db_column="cantidad_reservada"
     )
 
     estado_stock = models.CharField(
-        max_length=255,
+        max_length=20,
         db_column="estado_stock"
     )
 
@@ -401,5 +405,3 @@ class VStockDisponible(models.Model):
 
     def __str__(self):
         return self.producto_nombre
-
-    

@@ -13,23 +13,27 @@ class Cliente(models.Model):
     )
 
     razon_social = models.CharField(
-        max_length=255,
+        max_length=150,
         db_column="razon_social"
     )
 
     ruc = models.CharField(
-        max_length=255,
+        max_length=11,
         db_column="ruc"
     )
 
     contacto_nombre = models.CharField(
-        max_length=255,
-        db_column="contacto_nombre"
+        max_length=100,
+        db_column="contacto_nombre",
+        null=True,
+        blank=True
     )
 
     contacto_telefono = models.CharField(
-        max_length=255,
-        db_column="contacto_telefono"
+        max_length=20,
+        db_column="contacto_telefono",
+        null=True,
+        blank=True
     )
 
     estado = models.BooleanField(
@@ -70,7 +74,7 @@ class CategoriaProducto(models.Model):
     )
 
     nombre = models.CharField(
-        max_length=255,
+        max_length=100,
         db_column="nombre"
     )
 
@@ -110,12 +114,12 @@ class UnidadMedida(models.Model):
     )
 
     codigo = models.CharField(
-        max_length=255,
+        max_length=10,
         db_column="codigo"
     )
 
     nombre = models.CharField(
-        max_length=255,
+        max_length=50,
         db_column="nombre"
     )
 
@@ -153,7 +157,9 @@ class Producto(models.Model):
     )
 
     id_categoria = models.IntegerField(
-        db_column="id_categoria"
+        db_column="id_categoria",
+        null=True,
+        blank=True
     )
 
     id_unidad_medida = models.IntegerField(
@@ -161,17 +167,17 @@ class Producto(models.Model):
     )
 
     sku = models.CharField(
-        max_length=255,
+        max_length=50,
         db_column="sku"
     )
 
     codigo_ean = models.CharField(
-        max_length=255,
+        max_length=13,
         db_column="codigo_ean"
     )
 
     nombre = models.CharField(
-        max_length=255,
+        max_length=150,
         db_column="nombre"
     )
 
@@ -260,18 +266,20 @@ class Almacen(models.Model):
     )
 
     codigo = models.CharField(
-        max_length=255,
+        max_length=20,
         db_column="codigo"
     )
 
     nombre = models.CharField(
-        max_length=255,
+        max_length=100,
         db_column="nombre"
     )
 
     referencia = models.CharField(
-        max_length=255,
-        db_column="referencia"
+        max_length=150,
+        db_column="referencia",
+        null=True,
+        blank=True
     )
 
     capacidad_pallets = models.IntegerField(
@@ -320,17 +328,17 @@ class Zona(models.Model):
     )
 
     codigo = models.CharField(
-        max_length=255,
+        max_length=20,
         db_column="codigo"
     )
 
     nombre = models.CharField(
-        max_length=255,
+        max_length=100,
         db_column="nombre"
     )
 
     tipo = models.CharField(
-        max_length=255,
+        max_length=50,
         db_column="tipo"
     )
 
@@ -374,23 +382,33 @@ class Ubicacion(models.Model):
     )
 
     codigo = models.CharField(
-        max_length=255,
+        max_length=50,
         db_column="codigo"
     )
 
     pasillo = models.CharField(
-        max_length=255,
+        max_length=10,
         db_column="pasillo"
     )
 
+    rack = models.CharField(
+        max_length=10,
+        db_column="rack"
+    )
+
     nivel = models.CharField(
-        max_length=255,
+        max_length=10,
         db_column="nivel"
     )
 
     columna = models.CharField(
-        max_length=255,
+        max_length=10,
         db_column="columna"
+    )
+
+    posicion = models.CharField(
+        max_length=10,
+        db_column="posicion"
     )
 
     capacidad_volumen = models.DecimalField(

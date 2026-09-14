@@ -43,10 +43,10 @@ DEBUG = env.bool(
 )
 
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["localhost", "127.0.0.1"],
+)
 
 
 # =====================================================
@@ -183,6 +183,15 @@ DATABASES = {
             default="5432"
         ),
 
+        "OPTIONS": {
+
+            "sslmode": env(
+                "DB_SSLMODE",
+                default="require"
+            ),
+
+        },
+
     }
 }
 
@@ -257,6 +266,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
 
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+
+        "apps.usuarios.authentication.SupabaseJWTAuthentication",
+
+    ],
+
+    "DEFAULT_PERMISSION_CLASSES": [
+
+        "rest_framework.permissions.IsAuthenticated",
+
+    ],
+
     "DEFAULT_RENDERER_CLASSES": [
 
         "rest_framework.renderers.JSONRenderer",
@@ -266,18 +287,43 @@ REST_FRAMEWORK = {
 }
 
 
+# =====================================================
+# SUPABASE AUTH
+# =====================================================
+
+SUPABASE_URL = env("SUPABASE_URL", default="").rstrip("/")
+
+SUPABASE_JWT_ISSUER = env(
+    "SUPABASE_JWT_ISSUER",
+    default=f"{SUPABASE_URL}/auth/v1" if SUPABASE_URL else "",
+)
+
+SUPABASE_JWT_AUDIENCE = env(
+    "SUPABASE_JWT_AUDIENCE",
+    default="authenticated",
+)
+
+SUPABASE_JWT_ALGORITHMS = ["RS256", "ES256"]
+
+# Server-only key used exclusively for Supabase Auth administration. Prefer the
+# new sb_secret_* key; the legacy service_role JWT is accepted during migration.
+SUPABASE_SECRET_KEY = env("SUPABASE_SECRET_KEY", default="")
+
+
 
 # =====================================================
 # CORS - REACT FRONTEND
 # =====================================================
 
-CORS_ALLOWED_ORIGINS = [
+FRONTEND_URL = env(
+    "FRONTEND_URL",
+    default="http://localhost:5173",
+).rstrip("/")
 
-    "http://localhost:5173",
+CORS_ALLOWED_ORIGINS = [FRONTEND_URL]
 
-    "http://127.0.0.1:5173",
-
-]
+if DEBUG and FRONTEND_URL == "http://localhost:5173":
+    CORS_ALLOWED_ORIGINS.append("http://127.0.0.1:5173")
 
 
 # =====================================================
