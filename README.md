@@ -90,8 +90,77 @@ python manage.py migrate maestros
 La importación admite CSV UTF-8 de hasta 2 MB y 5,000 filas. Las plantillas se
 descargan desde la pantalla `Importaciones` para conservar los encabezados.
 
-## Pruebas
+## EP-03, EP-04 y EP-05
+
+EP-03 implementa la recepción desde guías, validación física, lotes,
+incidencias, asignación de ubicación e impresión del pedido de ingreso. EP-04
+implementa existencias filtrables, ubicabilidad, ocupación, vencimientos,
+traslados internos confirmables y división/reempaque de pallets con
+trazabilidad padre-hijo. EP-05 incorpora pedidos de salida multilínea,
+validación y reserva de stock, confirmación de picking y cierre transaccional
+del despacho con descuento automático de inventario. También incluye
+cancelación con liberación de reservas, sugerencia FEFO, picking por zona,
+historial y tiempos, incidencias e impresión del pedido de salida.
+
+Para preparar las estructuras y los permisos de ambos módulos:
 
 ```bash
-python manage.py test apps.usuarios apps.maestros
+python manage.py migrate
+python manage.py bootstrap_access --admin-email admin@cologistic.com
+```
+
+## EP-06: Reportes y BI
+
+EP-06 incorpora un dashboard consolidado con inventario, ocupación,
+recepciones, despachos, movimientos, incidencias y tiempos operativos. Incluye
+ocupación por almacén y zona, actividad por responsable, historial filtrable de
+movimientos, trazabilidad integral del producto y exportaciones nativas PDF y
+XLSX. Los reportes se calculan sobre las operaciones de EP-03, EP-04 y EP-05;
+no mantienen copias paralelas de los saldos.
+
+Los permisos nuevos son `reportes.ver`, `reportes.exportar` y
+`trazabilidad.ver`. Ejecuta nuevamente `bootstrap_access` para asignarlos a
+Gerencia, Jefe de Operaciones, Analista de Inventarios y Administrador TI.
+
+## EP-07: Planificación y capacidad operativa
+
+EP-07 proyecta la ocupación diaria en pallets equivalentes combinando la
+capacidad actual con recepciones y despachos programados. Permite consultar por
+almacén, cliente y periodo, comparar el plan con la ocupación real reconstruida
+y detectar fechas que superan un umbral configurable. La vista operativa
+consolida capacidad disponible, volumen de entrada/salida y documentos
+programados para apoyar la asignación de espacios, personal y recursos.
+
+El permiso `planificacion.ver` habilita el módulo para Gerencia, Jefe de
+Operaciones, Analista de Inventarios y Administrador TI.
+
+## EP-08: Operaciones técnicas
+
+EP-08 agrega una consola exclusiva para Administrador TI con monitoreo de
+disponibilidad, incidentes, telemetría, auditoría exportable, integraciones,
+políticas de conservación y despliegues controlados. Los respaldos manuales o
+programados registran responsable, tamaño, checksum y resultado.
+
+La restauración real está protegida por `TECHNICAL_ALLOW_RESTORE=false` de
+forma predeterminada y exige confirmación exacta. Los despliegues requieren una
+versión aprobada, plan de reversión y respaldo válido previo. Ejecuta nuevamente
+`bootstrap_access` para asignar los permisos técnicos al rol Administrador TI.
+
+## EP-09: Acondicionamiento de mercadería
+
+EP-09 incorpora solicitudes facturables de repaletizado, registro de su
+ejecución con paleta origen/destino, certificación y tarifa, además del
+reencajado con cantidades de cajas de origen y destino. Cada servicio conserva
+el cliente, stock, responsables y fechas sin alterar el saldo de inventario.
+
+Los servicios completados generan reportes PDF o Excel y pueden marcarse como
+enviados a facturación. Los permisos `acondicionamiento.ver`,
+`acondicionamiento.solicitar`, `acondicionamiento.ejecutar` y
+`acondicionamiento.facturacion` separan las responsabilidades del Cliente,
+Operario de almacén y responsables administrativos.
+
+## Pruebas automatizadas
+
+```bash
+python manage.py test
 ```

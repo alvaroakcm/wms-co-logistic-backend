@@ -137,7 +137,15 @@ class Movimiento(models.Model):
 
     motivo = models.CharField(
         max_length=255,
-        db_column="motivo"
+        db_column="motivo",
+        null=True,
+        blank=True,
+    )
+
+    estado = models.CharField(
+        max_length=20,
+        db_column="estado",
+        default="PENDIENTE",
     )
 
     id_usuario_registro = models.UUIDField(
@@ -197,12 +205,24 @@ class MovimientoDetalle(models.Model):
         db_column="id_stock_origen"
     )
 
+    id_ubicacion_origen = models.IntegerField(
+        db_column="id_ubicacion_origen"
+    )
+
     id_ubicacion_destino = models.IntegerField(
         db_column="id_ubicacion_destino"
     )
 
     id_pallet_destino = models.IntegerField(
-        db_column="id_pallet_destino"
+        db_column="id_pallet_destino",
+        null=True,
+        blank=True,
+    )
+
+    id_stock_destino = models.IntegerField(
+        db_column="id_stock_destino",
+        null=True,
+        blank=True,
     )
 
     cantidad = models.DecimalField(
@@ -299,7 +319,9 @@ class AsignacionUbicacion(models.Model):
     )
 
     id_pallet = models.IntegerField(
-        db_column="id_pallet"
+        db_column="id_pallet",
+        null=True,
+        blank=True
     )
 
     cantidad = models.DecimalField(

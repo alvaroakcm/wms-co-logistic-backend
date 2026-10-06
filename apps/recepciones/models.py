@@ -45,6 +45,13 @@ class PedidoIngreso(models.Model):
         blank=True
     )
 
+    transporte_brevete = models.CharField(
+        max_length=50,
+        db_column="transporte_brevete",
+        null=True,
+        blank=True
+    )
+
     estado = models.CharField(
         max_length=255,
         db_column="estado"
@@ -93,6 +100,31 @@ class PedidoIngresoDetalle(models.Model):
 
     id_producto = models.IntegerField(
         db_column="id_producto"
+    )
+
+    codigo_producto = models.CharField(
+        max_length=50,
+        db_column="codigo_producto"
+    )
+
+    descripcion_producto = models.CharField(
+        max_length=255,
+        db_column="descripcion_producto"
+    )
+
+    cantidad_pallets = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        db_column="cantidad_pallets",
+        default=0
+    )
+
+    factor_conversion = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        db_column="factor_conversion",
+        null=True,
+        blank=True
     )
 
     cantidad_esperada = models.DecimalField(
@@ -239,3 +271,96 @@ class Discrepancia(models.Model):
 
     def __str__(self):
         return self.tipo
+
+
+# =====================================================
+# INCIDENCIA DE RECEPCION
+# =====================================================
+
+class IncidenciaRecepcion(models.Model):
+
+    id_incidencia = models.AutoField(
+        primary_key=True,
+        db_column="id_incidencia"
+    )
+
+    id_pedido_ingreso = models.IntegerField(
+        db_column="id_pedido_ingreso"
+    )
+
+    id_pedido_ingreso_detalle = models.IntegerField(
+        db_column="id_pedido_ingreso_detalle"
+    )
+
+    tipo = models.CharField(
+        max_length=50,
+        db_column="tipo"
+    )
+
+    descripcion = models.TextField(
+        db_column="descripcion"
+    )
+
+    cantidad_afectada = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        db_column="cantidad_afectada"
+    )
+
+    id_usuario_responsable = models.UUIDField(
+        db_column="id_usuario_responsable"
+    )
+
+    fecha_registro = models.DateTimeField(
+        db_column="fecha_registro"
+    )
+
+    class Meta:
+        managed = False
+        db_table = '"recepcion"."incidencia"'
+
+        verbose_name = "Incidencia de recepción"
+        verbose_name_plural = "Incidencias de recepción"
+
+    def __str__(self):
+        return f"{self.tipo} - recepción {self.id_pedido_ingreso}"
+
+
+# =====================================================
+# LOTES DECLARADOS EN LA RECEPCION
+# =====================================================
+
+class PedidoIngresoLote(models.Model):
+
+    id_pedido_ingreso_lote = models.AutoField(
+        primary_key=True,
+        db_column="id_pedido_ingreso_lote"
+    )
+
+    id_pedido_ingreso_detalle = models.IntegerField(
+        db_column="id_pedido_ingreso_detalle"
+    )
+
+    id_lote = models.IntegerField(
+        db_column="id_lote"
+    )
+
+    cantidad = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        db_column="cantidad"
+    )
+
+    fecha_registro = models.DateTimeField(
+        db_column="fecha_registro"
+    )
+
+    class Meta:
+        managed = False
+        db_table = '"recepcion"."pedido_ingreso_lote"'
+
+        verbose_name = "Lote de recepción"
+        verbose_name_plural = "Lotes de recepción"
+
+    def __str__(self):
+        return f"Lote {self.id_lote} - detalle {self.id_pedido_ingreso_detalle}"

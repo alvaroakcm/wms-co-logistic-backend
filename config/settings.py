@@ -101,6 +101,8 @@ MIDDLEWARE = [
 
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
+    "apps.servicios.middleware.TechnicalObservabilityMiddleware",
+
 ]
 
 
@@ -331,3 +333,12 @@ if DEBUG and FRONTEND_URL == "http://localhost:5173":
 # =====================================================
 
 APPEND_SLASH = True
+
+# EP-08 technical operations. Restores remain disabled until an administrator
+# explicitly opens a maintenance window through the environment.
+TECHNICAL_BACKUP_DIR = Path(
+    env("TECHNICAL_BACKUP_DIR", default=str(BASE_DIR / "var" / "backups"))
+)
+TECHNICAL_ALLOW_RESTORE = env.bool("TECHNICAL_ALLOW_RESTORE", default=False)
+TECHNICAL_COMMAND_TIMEOUT = env.int("TECHNICAL_COMMAND_TIMEOUT", default=900)
+TECHNICAL_SLOW_REQUEST_MS = env.int("TECHNICAL_SLOW_REQUEST_MS", default=1000)

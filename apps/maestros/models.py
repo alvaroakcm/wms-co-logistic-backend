@@ -473,7 +473,9 @@ class Pallet(models.Model):
     capacidad_referencial = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        db_column="capacidad_referencial"
+        db_column="capacidad_referencial",
+        null=True,
+        blank=True,
     )
 
     id_pallet_padre = models.IntegerField(
@@ -482,7 +484,8 @@ class Pallet(models.Model):
         blank=True
     )
 
-    estado = models.BooleanField(
+    estado = models.CharField(
+        max_length=30,
         db_column="estado"
     )
 

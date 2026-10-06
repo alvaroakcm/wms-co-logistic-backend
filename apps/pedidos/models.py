@@ -95,6 +95,12 @@ class PedidoDetalle(models.Model):
         db_column="id_producto"
     )
 
+    id_lote = models.IntegerField(
+        db_column="id_lote",
+        null=True,
+        blank=True,
+    )
+
     cantidad_solicitada = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -345,6 +351,12 @@ class IncidenciaDespacho(models.Model):
         db_column="descripcion",
         null=True,
         blank=True
+    )
+
+    id_usuario_registro = models.UUIDField(
+        db_column="id_usuario_registro",
+        null=True,
+        blank=True,
     )
 
     fecha_registro = models.DateTimeField(
